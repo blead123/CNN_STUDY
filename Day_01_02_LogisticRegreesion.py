@@ -1,7 +1,7 @@
 import tensorflow.keras as keras
 import pandas as pd
 import numpy as np
-
+from sklearn import preprocessing
 
 # 딥러닝으로 할 수 있는것 -->회귀 , 분류
 def logistic_regression():
@@ -39,6 +39,16 @@ def logistic_regression_pima():
     print('y value')
     y = pima.values[:, -1:]
     print(y)
+    x=preprocessing.scale(x) # 데이터 전처리
+    model=keras.Sequential()
+    model.add(keras.layers.Dense(1,activation=keras.activations.sigmoid))
+    model.compile(optimizer=keras.optimizers.SGD(0.01),loss=keras.losses.binary_crossentropy,metrics='acc')
+    model.fit(x,y ,epochs=200, verbose=2)
+
+    p=model.predict(x)
+    p_bool=(p>0.5)
+
+    print('acc :' , np.mean(p_bool==y))
 
 
 logistic_regression_pima()
